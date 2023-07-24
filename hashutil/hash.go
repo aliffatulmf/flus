@@ -2,6 +2,7 @@ package hashutil
 
 import (
 	"aliffatulmf/flus/scan"
+	"bytes"
 	"crypto/md5"
 	"fmt"
 	"io"
@@ -48,7 +49,7 @@ func Verify(file *os.File, checksum []byte) (bool, error) {
 		return false, err
 	}
 
-	return isEqual(cs, checksum), nil
+	return bytes.Equal(cs, checksum), nil
 }
 
 func VerifyFile(file *FileHash) (bool, error) {
@@ -63,7 +64,7 @@ func VerifyFile(file *FileHash) (bool, error) {
 		return false, err
 	}
 
-	return isEqual(cs, file.Checksum), nil
+	return bytes.Equal(cs, file.Checksum), nil
 }
 
 func hashFile(f *os.File) ([]byte, error) {
@@ -74,10 +75,6 @@ func hashFile(f *os.File) ([]byte, error) {
 
 	hstr := fmt.Sprintf("%x", h.Sum(nil))
 	return []byte(hstr), nil
-}
-
-func isEqual(a, b []byte) bool {
-	return fmt.Sprintf("%x", a) == fmt.Sprintf("%x", b)
 }
 
 func ConvertToHexString(sum []byte) []byte {
