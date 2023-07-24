@@ -1,8 +1,8 @@
 package pkg
 
 import (
-	"aliffatulmf/flus/pkg/hashutil"
-	"aliffatulmf/flus/pkg/scan"
+	"aliffatulmf/flus/hashutil"
+	"aliffatulmf/flus/scan"
 	"fmt"
 	"io"
 	"os"

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"aliffatulmf/flus/pkg"
-	"aliffatulmf/flus/pkg/scan"
+	pkg "aliffatulmf/flus/move"
+	"aliffatulmf/flus/scan"
 	"flag"
 	"fmt"
 )

@@ -1,7 +1,7 @@
 package scan
 
 import (
-	"aliffatulmf/flus/pkg/ext"
+	"aliffatulmf/flus/ext"
 	"fmt"
 	"io/fs"
 	"os"

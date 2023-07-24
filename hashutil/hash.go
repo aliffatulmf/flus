@@ -1,7 +1,7 @@
 package hashutil
 
 import (
-	"aliffatulmf/flus/pkg/scan"
+	"aliffatulmf/flus/scan"
 	"crypto/md5"
 	"fmt"
 	"io"

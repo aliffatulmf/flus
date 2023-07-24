@@ -7,7 +7,7 @@ if errorlevel 1 (
     exit /b 1
 )
 
-@REM Check if go is at least version 1.22, if not, print error message and exit
+@REM Check if go is at least version 1.18, if not, print error message and exit
 for /f "tokens=3" %%i in ('go version') do set version=%%i
 set version=%version:~2,4%
 if "%version%" LSS "1.18" (
