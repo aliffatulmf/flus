@@ -7,12 +7,40 @@ import (
 
 // Supported file extensions
 var (
-	DocumentExtensions = []string{".pdf", ".xlsx", ".doc", ".docx", ".xls", ".csv", ".txt", ".ppt", ".pptx", ".odt", ".ods", ".odp", ".odg", ".odf", ".rtf", ".tex", ".wks", ".wps", ".wpd", ".yaml", ".yml", ".htm", ".html"}
-	ImageExtensions    = []string{".jpeg", ".jpg", ".png", ".gif", ".tiff", ".tif", ".bmp", ".svg", ".eps", ".raw", ".cr2", ".nef", ".orf", ".sr2", ".psd", ".ai"}
-	AudioExtensions    = []string{".mp3", ".wav", ".wma", ".mpa", ".aif", ".iff", ".m3u", ".m4a", ".mid", ".mpa", ".ra", ".ogg", ".oga", ".opus", ".flac", ".aac"}
-	VideoExtensions    = []string{".avi", ".flv", ".wmv", ".mov", ".mp4", ".webm", ".vob", ".mng", ".qt", ".mpg", ".mpeg", ".3gp", ".mkv", ".m4v", ".h264", ".rm", ".swf", ".asf", ".asx", ".rmvb", ".srt", ".mpv"}
-	ArchiveExtensions  = []string{".a", ".ar", ".cpio", ".iso", ".tar", ".gz", ".rz", ".7z", ".dmg", ".rar", ".xar", ".zip", ".jar", ".bz2", ".z", ".lz", ".lzma", ".lzo", ".xz", ".tz", ".deb", ".rpm", ".zipx", ".sit", ".sitx", ".pkg", ".bz2", ".tbz2", ".tgz", ".tlz", ".txz", ".war", ".ear", ".sar", ".rar", ".alz", ".ace", ".zoo", ".cpz", ".pak", ".arc"}
-	BinaryExtensions   = []string{".exe", ".msi", ".bin", ".com", ".apk", ".app", ".bat", ".cgi", ".pl", ".gadget", ".jar", ".py", ".wsf", ".dmg", ".iso"}
+	DocumentExtensions = []string{
+		".pdf", ".xlsx", ".doc", ".docx", ".xls", ".csv", ".txt", ".ppt", ".pptx",
+		".odt", ".ods", ".odp", ".odg", ".odf", ".rtf", ".tex", ".wks", ".wps",
+		".wpd", ".yaml", ".yml", ".htm", ".html",
+	}
+
+	ImageExtensions = []string{
+		".jpeg", ".jpg", ".png", ".gif", ".tiff", ".tif", ".bmp", ".svg", ".eps",
+		".raw", ".cr2", ".nef", ".orf", ".sr2", ".psd", ".ai", ".ico", ".webp",
+	}
+
+	AudioExtensions = []string{
+		".mp3", ".wav", ".wma", ".mpa", ".aif", ".iff", ".m3u", ".m4a", ".mid", ".mpa",
+		".ra", ".ogg", ".oga", ".opus", ".flac", ".aac", ".ac3", ".mka", ".wv", ".ape",
+	}
+
+	VideoExtensions = []string{
+		".avi", ".flv", ".wmv", ".mov", ".mp4", ".webm", ".vob", ".mng", ".qt", ".mpg",
+		".mpeg", ".3gp", ".mkv", ".m4v", ".h264", ".rm", ".swf", ".asf", ".asx", ".rmvb",
+		".srt", ".mpv", ".ogv", ".dv", ".divx", ".xvid", ".m2ts", ".mts",
+	}
+
+	ArchiveExtensions = []string{
+		".a", ".ar", ".cpio", ".iso", ".tar", ".gz", ".rz", ".7z", ".dmg", ".rar",
+		".xar", ".zip", ".jar", ".bz2", ".z", ".lz", ".lzma", ".lzo", ".xz", ".tz",
+		".deb", ".rpm", ".zipx", ".sit", ".sitx", ".pkg", ".bz2", ".tbz2", ".tgz",
+		".tlz", ".txz", ".war", ".ear", ".sar", ".rar", ".alz", ".ace", ".zoo",
+		".cpz", ".pak", ".arc", ".cab", ".msu", ".msix", ".appx", ".gz", ".xz", ".lz4",
+	}
+
+	BinaryExtensions = []string{
+		".exe", ".msi", ".bin", ".com", ".apk", ".app", ".bat", ".cgi", ".pl", ".gadget",
+		".jar", ".py", ".wsf", ".dmg", ".iso", ".elf", ".o", ".so", ".dll", ".dylib",
+	}
 )
 
 // Directory names for file types
