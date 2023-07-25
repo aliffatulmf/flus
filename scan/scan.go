@@ -61,7 +61,7 @@ func Files(root string) ([]FileMeta, error) {
 
 		return nil, fmt.Errorf("error reading directory %s: %v", root, err)
 	}
-	return fileMetas[1:], nil
+	return fileMetas, nil
 }
 
 func getFileInfo(d fs.DirEntry) (fs.FileInfo, error) {
