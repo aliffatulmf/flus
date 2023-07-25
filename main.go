@@ -3,14 +3,16 @@ package main
 import (
 	"aliffatulmf/flus/move"
 	"aliffatulmf/flus/scan"
-	"aliffatulmf/flus/util"
 	"flag"
 	"fmt"
+	"os"
+	"strings"
 )
 
 func main() {
 	target := flag.String("target", "", "target directory")
 	unsafe := flag.Bool("unsafe", false, "unsafe mode")
+	moveMode := flag.Bool("move", false, "move mode (default: copy)")
 	flag.Parse()
 
 	if *target == "" {
@@ -24,17 +26,19 @@ func main() {
 	}
 
 	// Move files to their respective directory.
-	for _, fileMeta := range fileMetas {
-		if *unsafe {
-			fmt.Print("Unsafe copying ", util.TrimText(fileMeta.Info.Name()))
-		} else {
-			fmt.Print("Safe copying ", util.TrimText(fileMeta.Info.Name()))
-		}
+	for idx, fileMeta := range fileMetas {
+		fmt.Println(strings.Repeat("-", 100))
+		fmt.Println("# Copy file", idx)
 
 		if err := move.Copy(&fileMeta, !*unsafe); err != nil {
 			panic(err)
 		}
 
-		fmt.Print(" => DONE!\n")
+		fmt.Printf("# file %d => DONE!\n", idx)
+		if *moveMode {
+			if err := os.Remove(fileMeta.Path); err != nil {
+				panic(err)
+			}
+		}
 	}
 }
