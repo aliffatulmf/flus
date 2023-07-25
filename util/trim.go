@@ -9,8 +9,8 @@ func TrimText(t string) string {
 	t = strings.TrimSpace(t)
 	l := len(t)
 
-	if l > 25 {
-		t = fmt.Sprint(t[:22], "...")
+	if l > 73 {
+		t = fmt.Sprint(t[:70], "...")
 	}
 
 	return t

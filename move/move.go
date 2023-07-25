@@ -3,6 +3,7 @@ package move
 import (
 	"aliffatulmf/flus/hashutil"
 	"aliffatulmf/flus/scan"
+	"aliffatulmf/flus/util"
 	"bytes"
 	"encoding/hex"
 	"fmt"
@@ -35,8 +36,8 @@ func Copy(fm *scan.FileMeta, safe bool) error {
 }
 
 func copy(src, dst string, safe bool) error {
-	fmt.Println("#\tSource\t\t=>", src)
-	fmt.Println("#\tDestination\t=>", dst)
+	fmt.Println("#\tSource\t\t=>", util.TrimText(src))
+	fmt.Println("#\tDestination\t=>", util.TrimText(dst))
 	fmt.Println("#\tSafe\t\t=>", safe)
 
 	r, err := os.Open(src)
