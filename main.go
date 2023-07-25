@@ -1,14 +1,16 @@
 package main
 
 import (
-	pkg "aliffatulmf/flus/move"
+	"aliffatulmf/flus/move"
 	"aliffatulmf/flus/scan"
+	"aliffatulmf/flus/util"
 	"flag"
 	"fmt"
 )
 
 func main() {
 	target := flag.String("target", "", "target directory")
+	unsafe := flag.Bool("unsafe", false, "unsafe mode")
 	flag.Parse()
 
 	if *target == "" {
@@ -23,9 +25,16 @@ func main() {
 
 	// Move files to their respective directory.
 	for _, fileMeta := range fileMetas {
-		if err := pkg.SafeCopy(&fileMeta); err != nil {
+		if *unsafe {
+			fmt.Print("Unsafe copying ", util.TrimText(fileMeta.Info.Name()))
+		} else {
+			fmt.Print("Safe copying ", util.TrimText(fileMeta.Info.Name()))
+		}
+
+		if err := move.Copy(&fileMeta, !*unsafe); err != nil {
 			panic(err)
 		}
-		fmt.Println("Moving", fileMeta.Info.Name())
+
+		fmt.Print(" => DONE!\n")
 	}
 }

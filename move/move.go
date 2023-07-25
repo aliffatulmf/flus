@@ -1,4 +1,4 @@
-package pkg
+package move
 
 import (
 	"aliffatulmf/flus/hashutil"
@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 )
 
-func SafeCopy(fm *scan.FileMeta) error {
+func Copy(fm *scan.FileMeta, safe bool) error {
 	dst := filepath.Join(fm.Root, fm.FileDirectory)
 
 	_, err := os.Lstat(dst)
@@ -21,13 +21,13 @@ func SafeCopy(fm *scan.FileMeta) error {
 		}
 	}
 
-	if err := safeCopy(fm.Path, filepath.Join(dst, fm.Info.Name())); err != nil {
+	if err := copy(fm.Path, filepath.Join(dst, fm.Info.Name()), safe); err != nil {
 		return err
 	}
 	return nil
 }
 
-func safeCopy(src, dst string) (err error) {
+func copy(src, dst string, safe bool) error {
 	r, err := os.Open(src)
 	if err != nil {
 		return fmt.Errorf("error opening file %s: %v", src, err)
@@ -42,7 +42,26 @@ func safeCopy(src, dst string) (err error) {
 
 	_, err = io.Copy(w, r)
 	if err != nil {
-		return err
+		return fmt.Errorf("error copying file %s: %v", src, err)
+	}
+
+	if !safe {
+		// Unsafe mode, skip checksum verification.
+		return nil
+	}
+
+	// Seek to the beginning of the file.
+	// This is needed because io.Copy() will copy the file from the current offset.
+	// If we don't seek to the beginning of the file, the checksum will be empty.
+	// This is because io.Copy() will copy the file from the end of the file.
+	_, err = r.Seek(0, io.SeekStart)
+	if err != nil {
+		return fmt.Errorf("error seeking file %s: %v", src, err)
+	}
+
+	_, err = w.Seek(0, io.SeekStart)
+	if err != nil {
+		return fmt.Errorf("error seeking file %s: %v", src, err)
 	}
 
 	h, err := hashutil.Hash(r)
