@@ -10,10 +10,11 @@ import (
 )
 
 func main() {
-	target := flag.String("target", "", "target directory")
-	unsafe := flag.Bool("unsafe", false, "unsafe mode")
-	moveMode := flag.Bool("move", false, "move mode (default: copy)")
-	flag.Parse()
+	fl := flag.NewFlagSet("Flus", flag.ExitOnError)
+	target := fl.String("target", "", "Specify the target directory")
+	unsafe := fl.Bool("unsafe", false, "Enable unsafe mode (skipping file verification)")
+	moveMode := fl.Bool("move", false, "Use move mode instead of copy (default: copy)")
+	fl.Parse(os.Args[1:])
 
 	if *target == "" {
 		panic("target directory cannot be empty")
