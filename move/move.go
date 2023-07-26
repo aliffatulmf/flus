@@ -72,12 +72,12 @@ func Copy(fm *scan.FileMeta, move, safe bool) error {
 			return fmt.Errorf("error seeking file: %v", err)
 		}
 
-		rh, err := hashutil.Hash(r)
+		rh, err = hashutil.Hash(r)
 		if err != nil {
 			return err
 		}
 
-		wh, err := hashutil.Hash(w)
+		wh, err = hashutil.Hash(w)
 		if err != nil {
 			return err
 		}
