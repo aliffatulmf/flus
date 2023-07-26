@@ -29,17 +29,17 @@ func main() {
 	// Move files to their respective directory.
 	for idx, fileMeta := range fileMetas {
 		fmt.Println(strings.Repeat("-", 100))
-		fmt.Println("# Copy file", idx)
+		fmt.Println("# Moving file", idx+1)
 
-		if err := move.Copy(&fileMeta, !*unsafe); err != nil {
-			panic(err)
+		if err := move.Copy(&fileMeta, *moveMode, !*unsafe); err != nil {
+			fmt.Println("# Skipping file", idx+1, "due to error:", err)
 		}
 
-		fmt.Printf("# file %d => DONE!\n", idx)
-		if *moveMode {
-			if err := os.Remove(fileMeta.Path); err != nil {
-				panic(err)
-			}
-		}
+		fmt.Printf("# File %d => DONE!\n", idx+1)
+		// if *moveMode {
+		// 	if err := os.Remove(fileMeta.Path); err != nil {
+		// 		panic(err)
+		// 	}
+		// }
 	}
 }
