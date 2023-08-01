@@ -3,6 +3,7 @@ package ext
 import (
 	"fmt"
 	"path/filepath"
+	"strings"
 )
 
 // Supported file extensions
@@ -10,7 +11,18 @@ var (
 	DocumentExtensions = []string{
 		".pdf", ".xlsx", ".doc", ".docx", ".xls", ".csv", ".txt", ".ppt", ".pptx",
 		".odt", ".ods", ".odp", ".odg", ".odf", ".rtf", ".tex", ".wks", ".wps",
-		".wpd", ".yaml", ".yml", ".htm", ".html",
+		".wpd", ".yaml", ".yml", ".htm", ".html", ".xml", ".json", ".log", ".md",
+		".markdown", ".msg", ".eml", ".emlx", ".mbox", ".pages", ".numbers", ".key",
+		".epub", ".azw", ".azw3", ".fb2", ".djvu", ".djv", ".pdb", ".pml", ".pmlz",
+		".rb", ".c", ".cpp", ".h", ".hpp", ".java", ".class", ".cs", ".vb", ".js",
+		".php", ".swf", ".fla", ".pl", ".pm", ".sh", ".bat", ".cmd", ".ps1", ".vbs",
+		".go", ".py", ".pyc", ".pyo", ".pyd", ".pyw", ".pyz", ".pyzw", ".swift",
+		".kt", ".kts", ".rs", ".r", ".lua", ".coffee", ".sass", ".scss", ".less",
+		".css", ".cshtml", ".vbhtml", ".jsp", ".asp", ".aspx", ".cer", ".cfm",
+		".yaws", ".ejs", ".phtml", ".hbs", ".mustache", ".twig", ".jade", ".haml",
+		".d", ".erl", ".hrl", ".ex", ".exs", ".eex", ".elm", ".ls", ".factor", ".fth",
+		".fs", ".fsi", ".fsx", ".ml", ".mli", ".mll", ".mly", ".re", ".rei", ".res",
+		".resi", ".resx", ".bas", ".frm", ".cls", ".ctl", ".vbp", ".vbg", ".vbscript",
 	}
 
 	ImageExtensions = []string{
@@ -53,9 +65,10 @@ var (
 	BinaryDir    = "Binary"
 )
 
-// Check if the file extension is in the list of supported extensions.
-func isSupported(ext string, extensions []string) bool {
-	for _, e := range extensions {
+var ErrUnsupported = fmt.Errorf("unsupported file extension")
+
+func isDocument(ext string) bool {
+	for _, e := range DocumentExtensions {
 		if e == ext {
 			return true
 		}
@@ -63,59 +76,103 @@ func isSupported(ext string, extensions []string) bool {
 	return false
 }
 
-func IsSupported(name string) bool {
-	ext := filepath.Ext(name)
-
-	switch {
-	case isSupported(ext, DocumentExtensions):
-		return true
-	case isSupported(ext, ImageExtensions):
-		return true
-	case isSupported(ext, AudioExtensions):
-		return true
-	case isSupported(ext, VideoExtensions):
-		return true
-		// case isSupported(ext, ArchiveExtensions):
-		// 	return true
-		// case isSupported(ext, BinaryExtensions):
-		// 	return true
-	}
-
-	return false
-}
-
-// Get the directory name for the file extension. Returns an error if the extension is not supported.
-func GetFileDirectory(name string) (string, error) {
-	ext := filepath.Ext(name)
-
-	switch {
-	case isSupported(ext, DocumentExtensions):
-		return DocumentsDir, nil
-	case isSupported(ext, ImageExtensions):
-		return ImagesDir, nil
-	case isSupported(ext, AudioExtensions):
-		return AudioDir, nil
-	case isSupported(ext, VideoExtensions):
-		return VideoDir, nil
-	// case isSupported(ext, ArchiveExtensions):
-	// 	return ArchivesDir, nil
-	// case isSupported(ext, BinaryExtensions):
-	// 	return BinaryDir, nil
-	default:
-		return "", fmt.Errorf("unsupported file extension: %s", ext)
-	}
-}
-
-// IsDirSupported checks if the directory name is supported.
-// Returns true if the directory name is supported, false otherwise.
-// Supported directory names are: Documents, Images, Audio, Video, Archives, Binary.
-func IsDirSupported(name string) bool {
-	dtype := []string{DocumentsDir, ImagesDir, AudioDir, VideoDir, ArchivesDir, BinaryDir}
-
-	for _, dir := range dtype {
-		if dir == name {
+func isAudio(ext string) bool {
+	for _, e := range AudioExtensions {
+		if e == ext {
 			return true
 		}
 	}
 	return false
+}
+
+func isImage(ext string) bool {
+	for _, e := range ImageExtensions {
+		if e == ext {
+			return true
+		}
+	}
+	return false
+}
+
+func isVideo(ext string) bool {
+	for _, e := range VideoExtensions {
+		if e == ext {
+			return true
+		}
+	}
+	return false
+}
+
+func isArchive(ext string) bool {
+	for _, e := range ArchiveExtensions {
+		if e == ext {
+			return true
+		}
+	}
+	return false
+}
+
+func isBinary(ext string) bool {
+	for _, e := range BinaryExtensions {
+		if e == ext {
+			return true
+		}
+	}
+	return false
+}
+
+// FileClassifier classifies a file based on its extension.
+// It returns the corresponding directory for the file type (DocumentsDir, ImagesDir, AudioDir, VideoDir).
+// If the file extension is not supported, it returns an error.
+func FileClassifier(file string) (string, error) {
+	ext := strings.ToLower(filepath.Ext(file))
+
+	switch {
+	case isDocument(ext):
+		return DocumentsDir, nil
+	case isImage(ext):
+		return ImagesDir, nil
+	case isAudio(ext):
+		return AudioDir, nil
+	case isVideo(ext):
+		return VideoDir, nil
+	}
+
+	return "", fmt.Errorf("unsupported file extension: %s", ext)
+}
+
+type File struct {
+	Path string
+	Name string
+	Ext  string
+}
+
+func NewFile(file string) *File {
+	return &File{
+		Path: filepath.Dir(file),
+		Name: filepath.Base(file),
+		Ext:  strings.ToLower(filepath.Ext(file)),
+	}
+}
+
+func (f *File) IsSupported() bool {
+	return isDocument(f.Ext) || isImage(f.Ext) || isAudio(f.Ext) || isVideo(f.Ext) || isArchive(f.Ext) || isBinary(f.Ext)
+}
+
+func (f *File) GetDirName() (string, error) {
+	switch {
+	case isDocument(f.Ext):
+		return DocumentsDir, nil
+	case isImage(f.Ext):
+		return ImagesDir, nil
+	case isAudio(f.Ext):
+		return AudioDir, nil
+	case isVideo(f.Ext):
+		return VideoDir, nil
+	case isArchive(f.Ext):
+		return ArchivesDir, nil
+	case isBinary(f.Ext):
+		return BinaryDir, nil
+	}
+	return "", ErrUnsupported
 }

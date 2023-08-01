@@ -20,7 +20,7 @@ if exist build rmdir /s /q build
 
 @REM Build the binary. if it fails, print error message and exit. if it succeeds, print success message
 echo Building binary...
-go build -o build\ .
+go build -v -o build\ .
 if errorlevel 1 (
     echo Build failed
     exit /b 1
