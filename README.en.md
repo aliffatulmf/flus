@@ -1,55 +1,59 @@
-# Flus (⚠️experimental)
+# Flus
 
-[English](README.en.md)
+[ID-id](README.md)
 
-**Flus** is an experimental program that functions to organize or move files based on their extensions to corresponding directories.
+The **Flus** command-line tool offers a streamlined solution for efficiently managing directory operations, such as copying and moving files between different locations. This tool provides a range of customizable options to cater to diverse requirements across various operating systems.
 
-## Installation
+## Usage
 
-To use this program, you can follow these steps:
-
-1. Download this repository.
-2. Navigate to the terminal.
-3. Run the `build.bat` or `build.sh` command.
-
-## Explanation
-
-### target
-
-The `-target` argument is an option in the Flus program used to specify the target directory you want to organize. When you run the program with this option, Flus will scan the files in the target directory and move them to appropriate directories based on their file types.
-
-For example, if you have a target directory with files of various types such as `.jpg`, `.pdf`, and `.zip`, Flus will move `.jpg` files to a directory named `Images`, `.pdf` files to a directory named `Documents`, and `.zip` files to a directory named `Archives`.
-
-You can specify the target directory by using the `-target` option followed by the directory path. For instance, if your target directory is located at `/home/user/documents`, you can run the program with the following command:
+To leverage the capabilities of the **Flus** tool, you need to provide specific command-line arguments as follows:
 
 ```powershell
-flus -target /home/user/documents
+PS C:\> flus.exe [options]
 ```
 
-### unsafe
+## Available Options
 
-The `-unsafe` argument is an option that allows users to enable the `unsafe` mode or skip verification steps after the file copying process is completed. Using this option aims to speed up the copying process, but it should be noted that this method also carries the potential risk of data corruption due to the lack of verification after copying is finished.
+- `-target`: Specify the target directory for processing. Files will be copied or moved to this directory.
 
-In this program, the usual verification method is to compare the Hash results of the original file and the copied file. However, when the `unsafe` mode is enabled, this verification process is bypassed to expedite execution.
+- `-move`: Activate move mode to relocate files from the source directory to the target directory, instead of copying.
 
-If you want to enable the `unsafe` mode, you can run the program with the following command:
+- `-buffer`: Define the buffer size for copying files. The buffer size significantly affects copying efficiency. The default buffer size is set to 64 KB.
+
+## Example
+
+Here's an example illustrating the usage of the **Flus** tool:
 
 ```powershell
-flus -target /home/user/documents -unsafe
+PS C:\> flus.exe -move -buffer 128000 -target C:\path\to\target\directory
 ```
 
-However, it is recommended to be cautious when using this option. Make sure you only enable the `unsafe` mode when you are confident that the source files and the copying process can be fully trusted, and the risk of data loss or damage due to negligence in verification is acceptable.
+In this example, the tool will move files from the source directory to the specified target directory using a buffer size of 128 KB.
 
-### move
+## Important Notes
 
-By default, this program will copy files to the appropriate directories based on their file types. However, if you want to delete the original files after the copying process is complete, you can use the `-move` option.
+- Replace `C:\path\to\target\directory` with the actual path of your target directory.
 
-⚠️ CAUTION! Using the `-move` option with `-unsafe` will delete the original files without verification. Make sure you understand the potential risks before using this option.
+- Exercise caution when using move mode, as files will be deleted from the source directory upon successful transfer to the target directory.
 
-If you want to enable the `-move` option, you can run the program with the following command:
+- Adjusting the buffer size can significantly impact the speed of copying or moving files, as well as memory usage. Experiment with various buffer sizes to find the optimal configuration for your system.
 
-```powershell
-flus -target /home/user/documents -move
-```
+## Running the Tool
 
-It is advisable not to use the `-move` option if you are unsure about the copying process. Delete the copied files manually and ensure that before deletion, the copied data has been verified and is not damaged.
+To run the **Flus** tool on your operating system, follow these steps:
+
+1. Download the executable file (`flus`) from the official repository or source.
+
+2. Open a terminal or command prompt.
+
+3. Navigate to the directory containing the `flus` executable using the `cd` command.
+
+4. Execute the tool with the desired options:
+
+   ```powershell
+   PS C:\> flus.exe [options]
+   ```
+
+## Note
+
+While this documentation provides a general overview of the **Flus** tool's functionalities, its compatibility and performance on specific operating systems other than Windows have not been extensively tested.

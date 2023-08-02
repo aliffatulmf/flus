@@ -1,55 +1,60 @@
-# Flus (⚠️eksperimental)
 
-[English](README.en.md)
+# Flus
 
-**Flus** adalah sebuah program eksperimental yang berfungsi untuk mengatur atau memindahkan file berdasarkan ekstensi ke direktori yang sesuai.
+[EN-en](README.en.md)
 
-## Insalasi
+Alat baris perintah **Flus** menawarkan solusi yang efisien untuk mengelola operasi direktori, seperti menyalin dan memindahkan berkas antara lokasi yang berbeda. Alat ini menyediakan berbagai opsi yang dapat disesuaikan untuk memenuhi beragam kebutuhan pada berbagai sistem operasi.
 
-Untuk menggunakan program ini, Anda dapat mengikuti langkah-langkah berikut:
+## Penggunaan
 
-1. Download repository ini.
-2. Navigasi terminal.
-3. Jalankan perintah `build.bat` atau `build.sh`.
-
-## Penjelasan
-
-### target
-
-Argumen `-target` adalah opsi dalam program Flus yang digunakan untuk menentukan direktori target yang ingin Anda atur. Ketika Anda menjalankan program dengan opsi ini, Flus akan memindai berkas-berkas dalam direktori target dan memindahkannya ke direktori yang sesuai berdasarkan jenis file mereka.
-
-Sebagai contoh, jika Anda memiliki sebuah direktori target dengan berkas-berkas berbagai jenis seperti `.jpg`, `.pdf`, dan `.zip`, Flus akan memindahkan berkas `.jpg` ke direktori bernama `Images`, berkas `.pdf` ke direktori bernama `Documents`, dan berkas `.zip` ke direktori bernama `Archives`.
-
-Anda dapat menentukan direktori target dengan menggunakan opsi `-target` diikuti dengan jalur direktori. Misalnya, jika direktori target Anda berada di `/home/user/documents`, Anda dapat menjalankan program dengan perintah berikut:
+Untuk memanfaatkan kemampuan alat **Flus**, kamu perlu memberikan argumen baris perintah spesifik sebagai berikut:
 
 ```powershell
-flus -target /home/user/documents
+PS C:\> flus.exe [opsi]
 ```
 
-### unsafe
+## Opsi yang Tersedia
 
-Argumen `-unsafe` adalah opsi yang memungkinkan pengguna untuk mengaktifkan mode `unsafe` atau melewati langkah verifikasi setelah proses penyalinan file berhasil dilakukan. Penggunaan opsi ini bertujuan untuk meningkatkan kecepatan proses penyalinan, namun perlu diingat bahwa metode ini juga membawa potensi risiko kerusakan data karena ketiadaan verifikasi setelah penyalinan selesai.
+- `-target`: Tentukan direktori target untuk proses. Berkas akan disalin atau dipindahkan ke direktori ini.
 
-Dalam program ini, metode verifikasi yang biasa digunakan adalah dengan membandingkan hasil _Hash_ dari file asli dan file hasil salinan. Namun, saat mode `unsafe` diaktifkan, proses verifikasi ini dilewati untuk mempercepat eksekusi.
+- `-move`: Aktifkan mode pemindahan untuk memindahkan berkas dari direktori sumber ke direktori target, alih-alih menyalin.
 
-Jika Anda ingin mengaktifkan mode `unsafe`, Anda dapat menjalankan program dengan perintah berikut:
+- `-buffer`: Tentukan ukuran buffer untuk menyalin berkas. Ukuran buffer sangat mempengaruhi efisiensi penyalinan. Ukuran buffer default diatur ke 64 KB.
+
+## Contoh
+
+Berikut adalah contoh yang menggambarkan penggunaan alat **Flus**:
 
 ```powershell
-flus -target /home/user/documents -unsafe
+PS C:\> flus.exe -move -buffer 128000 -target C:\path\ke\direktori\target
 ```
 
-Namun, disarankan untuk berhati-hati saat menggunakan opsi ini. Pastikan Anda hanya mengaktifkan mode `unsafe` ketika Anda yakin bahwa sumber file dan proses penyalinannya dapat dipercaya sepenuhnya, dan risiko kehilangan atau kerusakan data akibat kelalaian dalam verifikasi dapat diterima.
+Dalam contoh ini, alat ini akan memindahkan berkas dari direktori sumber ke direktori target yang ditentukan menggunakan ukuran buffer 128 KB.
 
-### move
+## Catatan Penting
 
-Secara default program ini akan menyalin file ke direktori yang sesuai berdasarkan jenis file. Namun, jika Anda ingin menghapus file asli setelah proses penyalinan selesai, Anda dapat menggunakan opsi `-move`.
+- Gantikan `/path/ke/direktori/target` dengan jalur aktual dari direktori target.
 
-⚠️ PERHATIAN!  Penggunaan opsi `-move` dengan `-unsafe` akan menghapus file asli tanpa melakukan verifikasi. Pastikan Anda telah memahami risiko yang mungkin terjadi sebelum menggunakan opsi ini.
+- Berhati-hatilah saat menggunakan mode _move_, karena berkas akan dihapus dari direktori sumber setelah berhasil dipindahkan ke direktori target.
 
-Jika Anda ingin mengaktifkan opsi `-move`, Anda dapat menjalankan program dengan perintah berikut:
+- Penyesuaian ukuran buffer dapat secara signifikan mempengaruhi kecepatan penyalinan atau pemindahan berkas, serta penggunaan memori. Coba variasikan ukuran buffer untuk menemukan konfigurasi optimal bagi sistem milikmu.
 
-```powershell
-flus -target /home/user/documents -move
-```
+## Menjalankan Alat
 
-Disarankan untuk tidak menggunakan opsi `-move` jika Anda tidak yakin dengan proses penyalinan yang akan dilakukan. Hapus file yang telah dicopy secara manual dan pastikan sebelum menghapus, data yang disalin telah terverifikasi dan tidak rusak.
+Untuk menjalankan alat **Flus** pada sistem operasi milikmu, ikuti langkah berikut:
+
+1. Unduh berkas eksekusi (`flus`) dari repositori resmi atau sumber yang tersedia.
+
+2. Buka terminal atau _command prompt_.
+
+3. Navigasikan ke direktori yang berisi berkas eksekusi `flus` dengan menggunakan perintah `cd`.
+
+4. Jalankan alat dengan opsi yang diinginkan:
+
+   ```powershell
+   PS C:\> flus.exe [opsi]
+   ```
+
+## Catatan
+
+Meskipun dokumentasi ini memberikan gambaran umum tentang fungsionalitas **Flus**, kompatibilitas dan performanya pada sistem operasi lain selain Windows belum sepenuhnya diuji.

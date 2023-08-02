@@ -18,6 +18,7 @@ var (
 	move     bool
 	skip     bool
 	buffSize uint
+	version  bool
 )
 
 func init() {
@@ -25,10 +26,16 @@ func init() {
 	fl.StringVar(&target, "target", "", "Target directory to process")
 	fl.BoolVar(&move, "move", false, "Use move mode instead of copy")
 	fl.UintVar(&buffSize, "buffer", 64*1024, "Buffer size to use when copying files")
+	fl.BoolVar(&version, "version", false, "Print version information")
 	fl.Parse(os.Args[1:])
 }
 
 func Command() {
+	if version {
+		fmt.Println("Flus v1.0")
+		os.Exit(0)
+	}
+
 	if target == "" {
 		logger.Error("target directory is not specified")
 		os.Exit(1)
