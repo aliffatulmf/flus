@@ -15,6 +15,9 @@ func All(root string) ([]Metadata, error) {
 		return nil, fmt.Errorf("failed to get absolute path: %w", err)
 	}
 
+	metaCh := make(chan Metadata)
+	errCh := make(chan error)
+
 	walkFunc := func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -40,17 +43,30 @@ func All(root string) ([]Metadata, error) {
 			return err
 		}
 
-		metas = append(metas, Metadata{
+		metaCh <- Metadata{
 			Source:      path,
 			Info:        info,
 			Destination: dir,
-		})
+		}
 		return nil
 	}
 
-	if err := filepath.WalkDir(root, walkFunc); err != nil {
-		return nil, err
+	go func() {
+		defer close(metaCh)
+
+		if err := filepath.WalkDir(root, walkFunc); err != nil {
+			errCh <- fmt.Errorf("failed to walk directory: %w", err)
+		}
+	}()
+
+	for meta := range metaCh {
+		metas = append(metas, meta)
 	}
 
-	return metas, nil
+	select {
+	case err := <-errCh:
+		return nil, err
+	default:
+		return metas, nil
+	}
 }
