@@ -1,24 +1,17 @@
 package scan
 
 import (
-	"aliffatulmf/flus/ext"
+	"aliffatulmf/flus/file"
+	"aliffatulmf/flus/logger"
 	"fmt"
 	"io/fs"
 	"path/filepath"
 )
 
-func All(root string) ([]Metadata, error) {
+func All(root string) (*[]Metadata, error) {
 	var metas []Metadata
 
-	root, err := filepath.Abs(root)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get absolute path: %w", err)
-	}
-
-	metaCh := make(chan Metadata)
-	errCh := make(chan error)
-
-	walkFunc := func(path string, d fs.DirEntry, err error) error {
+	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -32,41 +25,28 @@ func All(root string) ([]Metadata, error) {
 			return fmt.Errorf("failed to get file info: %w", err)
 		}
 
-		fext := ext.NewFile(info.Name())
-		if !fext.IsSupported() {
+		if !file.IsSupported(info.Name()) {
 			// Skip unsupported files.
 			return nil
 		}
 
-		dir, err := fext.GetDirName()
+		dir, err := file.FileToDir(info.Name())
 		if err != nil {
 			return err
 		}
 
-		metaCh <- Metadata{
+		metas = append(metas, Metadata{
 			Source:      path,
 			Info:        info,
 			Destination: dir,
-		}
+		})
+
 		return nil
+	})
+
+	if err != nil {
+		logger.Error(err)
 	}
 
-	go func() {
-		defer close(metaCh)
-
-		if err := filepath.WalkDir(root, walkFunc); err != nil {
-			errCh <- fmt.Errorf("failed to walk directory: %w", err)
-		}
-	}()
-
-	for meta := range metaCh {
-		metas = append(metas, meta)
-	}
-
-	select {
-	case err := <-errCh:
-		return nil, err
-	default:
-		return metas, nil
-	}
+	return &metas, nil
 }

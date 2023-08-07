@@ -11,27 +11,6 @@ type Metadata struct {
 	Info        fs.FileInfo // File info
 	unsafe      bool        // Unsafe copy
 	move        bool        // Copy and remove source
-	skip        bool        // Skip copy
-}
-
-func (m *Metadata) Skip() error {
-	if m.skip {
-		return fmt.Errorf("file %s is already skipped", m.Info.Name())
-	}
-	m.skip = true
-	return nil
-}
-
-func (m *Metadata) Unskip() error {
-	if !m.skip {
-		return fmt.Errorf("file %s is not skipped", m.Info.Name())
-	}
-	m.skip = false
-	return nil
-}
-
-func (m *Metadata) IsSkipped() bool {
-	return m.skip
 }
 
 func (m *Metadata) Move() error {

@@ -1,48 +1,39 @@
 package hashutil
 
 import (
+	"bytes"
 	"errors"
 	"hash/crc32"
 	"io"
-	"sync"
 )
 
-var ErrHashFile = errors.New("error hashing file")
-var ErrMissMatch = errors.New("hash mismatch")
+var (
+	ErrHashFile  = errors.New("error hashing file")
+	ErrMissMatch = errors.New("hash mismatch")
+)
 
 var table = crc32.MakeTable(crc32.Koopman)
 
-var bufPool = sync.Pool{
-	New: func() interface{} {
-		return make([]byte, 64*1024)
-	},
-}
-
 func Hash(f io.ReadSeeker) ([]byte, error) {
 	h := crc32.New(table)
-	buf := bufPool.Get().([]byte)
 
-	for {
-		n, err := f.Read(buf)
-		if err != nil && err != io.EOF {
-			bufPool.Put(buf)
-			return nil, ErrHashFile
-		}
-		if n == 0 {
-			break
-		}
-		if _, err := h.Write(buf[:n]); err != nil {
-			bufPool.Put(buf)
-			return nil, ErrHashFile
-		}
+	if _, err := f.Seek(0, io.SeekStart); err != nil {
+		return nil, err
 	}
-	bufPool.Put(buf)
+
+	if _, err := io.Copy(h, f); err != nil {
+		return nil, ErrHashFile
+	}
+
+	if _, err := f.Seek(0, io.SeekStart); err != nil {
+		return nil, err
+	}
 
 	return h.Sum(nil), nil
 }
 
 func Verify(a, b []byte) error {
-	if crc32.Checksum(a, table) != crc32.Checksum(b, table) {
+	if !bytes.Equal(a, b) {
 		return ErrMissMatch
 	}
 	return nil

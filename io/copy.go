@@ -5,22 +5,14 @@ import (
 	"io"
 )
 
-func SafeCopy(src io.ReadSeeker, dst io.ReadWriteSeeker, bSize uint) error {
+func CopyAndVerify(src io.ReadSeeker, dst io.ReadWriteSeeker, buffSize uint) error {
 	srcHash, err := hashutil.Hash(src)
 	if err != nil {
 		return err
 	}
 
-	if _, err := src.Seek(0, io.SeekStart); err != nil {
-		return err
-	}
-
-	buff := make([]byte, bSize)
+	buff := make([]byte, buffSize)
 	if _, err := io.CopyBuffer(dst, src, buff); err != nil {
-		return err
-	}
-
-	if _, err := dst.Seek(0, io.SeekStart); err != nil {
 		return err
 	}
 
