@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 )
 
-func DoScan(args *args.Args) {
-	metas, err := scan.All(args.Target)
+func DoScan(av *args.Value) {
+	metas, err := scan.All(av.Target)
 	if err != nil {
 		logger.Errorf("failed to scan files: %v", err)
 	}
@@ -24,14 +24,14 @@ func DoScan(args *args.Args) {
 		logger.Infof("transferring file: %s \t", src)
 		logger.Infof("to: %s \n", dst)
 
-		if err := processFile(args, meta); err != nil {
+		if err := processFile(av, meta); err != nil {
 			logger.Error(err)
 			continue
 		}
 	}
 }
 
-func processFile(args *args.Args, meta scan.Metadata) error {
+func processFile(args *args.Value, meta scan.Metadata) error {
 	dir := filepath.Join(args.Target, meta.Destination)
 	if _, err := os.Lstat(dir); err != nil {
 		if os.IsNotExist(err) {
@@ -41,7 +41,7 @@ func processFile(args *args.Args, meta scan.Metadata) error {
 		}
 	}
 
-	if err := fio.Relocate(dir, meta, args.Buffer); err != nil {
+	if err := fio.Relocate(dir, meta); err != nil {
 		return err
 	}
 

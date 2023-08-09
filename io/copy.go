@@ -5,13 +5,13 @@ import (
 	"io"
 )
 
-func CopyAndVerify(src io.ReadSeeker, dst io.ReadWriteSeeker, buffSize uint) error {
+func CopyAndVerify(src io.ReadSeeker, dst io.ReadWriteSeeker) error {
 	srcHash, err := hashutil.Hash(src)
 	if err != nil {
 		return err
 	}
 
-	buff := make([]byte, buffSize)
+	buff := make([]byte, 32768) // 32KB
 	if _, err := io.CopyBuffer(dst, src, buff); err != nil {
 		return err
 	}

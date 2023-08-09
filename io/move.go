@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func Relocate(path string, meta scan.Metadata, buffSize uint) error {
+func Relocate(path string, meta scan.Metadata) error {
 	srcStream, err := os.Open(meta.Source)
 	if err != nil {
 		return err
@@ -20,7 +20,7 @@ func Relocate(path string, meta scan.Metadata, buffSize uint) error {
 	}
 	defer dstStream.Close()
 
-	if err := CopyAndVerify(srcStream, dstStream, buffSize); err != nil {
+	if err := CopyAndVerify(srcStream, dstStream); err != nil {
 		return err
 	}
 

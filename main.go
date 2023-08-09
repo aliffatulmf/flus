@@ -7,15 +7,15 @@ import (
 )
 
 func main() {
-	arg := args.InitArgs()
+	av := args.NewArgs()
 
 	switch {
-	case arg.Version:
+	case av.Version:
 		cmd.Version()
 		return
-	case arg.Target == "":
+	case av.Target == "":
 		logger.Fatal("target directory is required")
 	}
 
-	cmd.DoScan(arg)
+	cmd.DoScan(av)
 }
